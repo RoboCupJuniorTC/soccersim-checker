@@ -1,4 +1,4 @@
-from flask_appbuilder import IndexView
+from flask_appbuilder import IndexView, BaseView
 
 
 class MyIndexView(IndexView):
