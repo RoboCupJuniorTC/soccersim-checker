@@ -1,1 +1,10 @@
 .venv/
+__pycache__
+*.pyc
+app.db
+./tmp
+./build/*
+.idea
+env
+venv
+*.sublime*
