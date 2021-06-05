@@ -1,10 +1,13 @@
-Base Skeleton to start your application using Flask-AppBuilder
---------------------------------------------------------------
+RCJ SoccerSim checker
+---------------------
+
+A quick web app to facilitate automatically checking the code submissions
+for `RCJ SoccerSim 2021 <https://robocupjuniortc.github.io/rcj-soccer-sim/>`_ 
+(and hopefully onwards...).
 
 - Install it::
 
-	pip install flask-appbuilder
-	git clone https://github.com/dpgaspar/Flask-AppBuilder-Skeleton.git
+    pip install -r requirements.txt
 
 - Run it::
 

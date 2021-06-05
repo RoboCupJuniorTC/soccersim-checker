@@ -11,6 +11,16 @@
   <div class="container">
     <h1>{{_("SoccerSim Checker")}}</h1>
     <p>Welcome to a platform which allows you to check (and test) the SoccerSim submissions!</p>
+    <hr />
+    {% if current_user.is_authenticated %}
+    <p>
+      Please submit your code via the
+      <a href="{{ url_for('UploadsModelView.list') }}"> Code submission </a>
+      interface.
+    </p>
+    {% else %}
+    <p> To upload your submission, please Login first (in the top-right conrner).</p>
+    {% endif %}
   </div>
 </div>
 

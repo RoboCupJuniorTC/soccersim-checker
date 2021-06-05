@@ -1,0 +1,9 @@
+{% extends "appbuilder/general/model/list.html" %}
+  
+{% block list_search scoped %}
+  <div class="alert alert-info">
+    To upload a new submission, please click on the plus icon below.
+  </div>
+  <hr />
+  {{ super() }}
+{% endblock %}
