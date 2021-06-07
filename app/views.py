@@ -1,6 +1,7 @@
 from flask import render_template
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder import ModelView, ModelRestApi
+from flask_appbuilder.views import ModelView, CompactCRUDMixin
+from app.models import Uploads
 
 from . import appbuilder, db
 
@@ -32,19 +33,39 @@ from . import appbuilder, db
     )
 """
 
-"""
-    Application wide 404 error handler
-"""
+
+class UploadsModelView(CompactCRUDMixin, ModelView):
+    datamodel = SQLAInterface(Uploads)
+    base_permissions = ['can_add', 'can_list', 'can_show']
+    list_template = 'list_uploads.html'
+
+    label_columns = {
+        "file_name": "File Name",
+        "download": "Download",
+        "custom_status": "Status"
+    }
+
+    add_columns = ["file", "description"]
+    edit_columns = ["file", "description"]
+    list_columns = ["created_by", "created_on",
+                    "file_name", "description", "custom_status", "download"]
+    show_columns = ["created_by", "created_on",
+                    "file_name", "description", "custom_status", "download"]
 
 
 @appbuilder.app.errorhandler(404)
 def page_not_found(e):
     return (
         render_template(
-            "404.html", base_template=appbuilder.base_template, appbuilder=appbuilder
+            "404.html",
+            base_template=appbuilder.base_template,
+            appbuilder=appbuilder
         ),
         404,
     )
 
 
 db.create_all()
+appbuilder.add_view(
+    UploadsModelView, "List Uploads", icon="fa-table", category="Code Uploads"
+)
