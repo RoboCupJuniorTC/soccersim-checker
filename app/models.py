@@ -1,4 +1,4 @@
-from flask import Markup, url_for
+from flask import Markup, url_for, g
 from flask_appbuilder import Model
 from sqlalchemy import Column, Integer, String, Enum
 from flask_appbuilder.models.mixins import AuditMixin, FileColumn
@@ -15,18 +15,31 @@ AuditMixin will add automatic timestamp of created and modified by who
 """
 
 
-class Uploads(AuditMixin, Model):
-    __tablename__ = "uploads"
+class AuditMixinExtra(AuditMixin):
+    """to work with this app's database permitting edits by 'unknown' user
+    """
+    def get_user_id(cls):
+        try:
+            return g.user.id
+        except Exception:
+            return 1
+
+
+class Upload(AuditMixinExtra, Model):
+    __tablename__ = "upload"
     id = Column(Integer, primary_key=True)
     file = Column(FileColumn, nullable=False)
-    status = Column(Enum("Uploaded", "In progress", "Simulated"),
+    status = Column(Enum("Uploaded", "InProgress", "Simulated"),
                     server_default="Uploaded")
     description = Column(String(150))
+
+    def __repr__(self):
+        return f'<Upload({self.file_name()}, status={self.status})>'
 
     def download(self):
         return Markup(
             '<a href="'
-            + url_for("UploadsModelView.download",
+            + url_for("UploadModelView.download",
                       filename=str(self.file))
             + '">Download</a>'
         )
@@ -38,7 +51,7 @@ class Uploads(AuditMixin, Model):
     def custom_status(self):
         status_to_bnt = {
             'Uploaded': 'label-default',
-            'In progress': 'label-warning',
+            'InProgress': 'label-warning',
             'Simulated': 'label-success'
         }
 
