@@ -1,7 +1,7 @@
 from flask import render_template
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder.views import ModelView, CompactCRUDMixin
-from app.models import Uploads
+from app.models import Upload
 
 from . import appbuilder, db
 
@@ -34,9 +34,10 @@ from . import appbuilder, db
 """
 
 
-class UploadsModelView(CompactCRUDMixin, ModelView):
-    datamodel = SQLAInterface(Uploads)
-    base_permissions = ['can_add', 'can_list', 'can_show']
+class UploadModelView(CompactCRUDMixin, ModelView):
+    datamodel = SQLAInterface(Upload)
+    base_permissions = ['can_add', 'can_list', 'can_show', 'can_download']
+    base_order = ('created_on', 'desc')
     list_template = 'list_uploads.html'
 
     label_columns = {
@@ -67,5 +68,5 @@ def page_not_found(e):
 
 db.create_all()
 appbuilder.add_view(
-    UploadsModelView, "List Uploads", icon="fa-table", category="Code Uploads"
+    UploadModelView, "List Uploads", icon="fa-table", category="Code Uploads"
 )
