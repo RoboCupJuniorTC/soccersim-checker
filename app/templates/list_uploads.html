@@ -1,9 +1,63 @@
 {% extends "appbuilder/general/model/list.html" %}
-  
+
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+{% endblock %}
+
+{% block head_js %}
+  {{ super() }}
+  <script src="{{url_for('static', filename='js/zip.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/submission_check.js')}}"></script>
+{% endblock %}
+
 {% block list_search scoped %}
   <div class="alert alert-info">
     To upload a new submission, please click on the plus icon below.
   </div>
   <hr />
   {{ super() }}
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script>
+      function init() {
+        var fileInput = document.getElementById("file");
+        fileInput.parentNode.insertAdjacentHTML("afterend", '<div id="zip-error"></div>');
+        fileInput.parentNode.insertAdjacentHTML("afterend", '<div id="zip-success"></div>');
+
+        fileInput.addEventListener("change", function(event) {
+            const reader = new zip.ZipReader(new zip.BlobReader(fileInput.files[0]));
+
+            // FIXME: this is bad selector because there are more buttons. Add unique attribute
+            var submit_btn = document.querySelectorAll("button[type=submit]")[1];
+            var zip_error = document.getElementById("zip-error");
+            var zip_success = document.getElementById("zip-success");
+            zip_error.innerHTML = "";
+            zip_success.innerHTML = "";
+
+            reader.getEntries().then(function(entries) {
+                var errors = get_submission_errors(reader.reader.size, entries);
+
+                if (errors.length > 0) {
+                    var error_msg = "<ul>";
+                    for (var i = 0; i < errors.length; i++) {
+                        error_msg += "<li>" + errors[i] + "</li>";
+                    }
+                    error_msg += "</ul>";
+                    zip_error.innerHTML = error_msg;
+                    submit_btn.style.display = "none";
+                } else {
+                   zip_success.innerHTML = "Your ZIP file looks OK! <br>Files found: " + entries.map(x => x.filename).join(", ");
+                   submit_btn.style.display = "inline-block";
+                }
+            }).catch(function(e) {
+                zip_error.innerHTML = "Failed to load your submission. Check whether it is correct ZIP file!";
+            });
+        });
+      }
+
+      window.addEventListener("load", init, false);
+    </script>
 {% endblock %}
