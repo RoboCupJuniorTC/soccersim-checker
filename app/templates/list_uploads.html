@@ -15,6 +15,29 @@
   <div class="alert alert-info">
     To upload a new submission, please click on the plus icon below.
   </div>
+  <div>
+    Once you upload your submission, it will be automatically checked to make
+    sure it is formatted properly.
+  </div>
+  <div>
+    The submission can be in three states:
+    <ul>
+      <li>
+        <span class="label label-default">Uploaded</span>: your submission
+        has been successfully uploaded and is waiting in queue to be simulated.
+      </li>
+      <li>
+        <span class="label label-warning">InProgress</span>: your submission
+        is being simulated right now (the proces takes about a minute).
+      </li>
+      <li>
+        <span class="label label-success">Simulated</span>: your submission has
+        been simulated and you can check the output on the accompanying link
+        (make sure to look for a <code>.html</code> file; there should also be
+        a <code>.log</code> file with some debugging info).
+      </li>
+    </ul>
+  </div>
   <hr />
   {{ super() }}
 {% endblock %}

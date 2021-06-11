@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, Enum
 from flask_appbuilder.models.mixins import AuditMixin, FileColumn
 from flask_appbuilder.filemanager import get_file_original_name
 from flask_appbuilder.models.decorators import renders
+from . import app
 
 """
 
@@ -32,6 +33,7 @@ class Upload(AuditMixinExtra, Model):
     status = Column(Enum("Uploaded", "InProgress", "Simulated"),
                     server_default="Uploaded")
     description = Column(String(150))
+    match_id = Column(String(150))
 
     def __repr__(self):
         return f'<Upload({self.file_name()}, status={self.status})>'
@@ -59,4 +61,15 @@ class Upload(AuditMixinExtra, Model):
             f'<span class="label {status_to_bnt[self.status]}">'
             f'{self.status}'
             '</span>'
+        )
+
+    def match_link(self):
+        # If output_dir was not set yet or is empty, just return that
+        if not self.match_id or len(self.match_id) == 0:
+            return Markup('')
+
+        return Markup(
+            f'<a href="{app.config["OUTPUTS_URL"]}/{self.match_id}">'
+            ' Check output '
+            '</a>'
         )

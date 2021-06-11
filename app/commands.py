@@ -5,6 +5,9 @@ import sys
 import atexit
 import datetime
 import subprocess
+from pathlib import Path
+import shutil
+import zipfile
 
 
 my_subprocess = []
@@ -49,14 +52,39 @@ def process_next_match():
 
     team_id = first_uploaded.changed_by.last_name
 
+    ROBOT_CODE_FOLDER = app.config['ROBOT_CODE_FOLDER']
+    UPLOAD_FOLDER = app.config['UPLOAD_FOLDER']
+
+    zip_path = Path(UPLOAD_FOLDER) / Path(first_uploaded.file)
+    code_path = Path(ROBOT_CODE_FOLDER) / Path(team_id)
+
+    # Clean up the code path
+    if code_path.exists():
+        shutil.rmtree(code_path)
+
+    # Ensure the code path actually exists
+    code_path.mkdir(parents=True, exist_ok=True)
+
+    # Unzip the contents to the proper location
+    with zipfile.ZipFile(zip_path) as z:
+        z.extractall(code_path)
+
     first_uploaded.status = 'InProgress'
 
     session.add(first_uploaded)
     session.commit()
 
     timestamp = datetime.datetime.now().strftime('%Z%Y%m%d_%H%M%S')
-    with open(f"logs/{timestamp}_{team_id}.log", 'w') as fp:
-        cmd_str = f"bash run.sh {team_id} 999 {timestamp}_test_{team_id}"
+    match_id = f"{timestamp}_test_{team_id}"
+
+    # Ensure the output_dir exists
+    output_dir = Path(app.config['SIMULATION_OUTPUTS_FOLDER'] + match_id)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    demo_team_id = app.config['DEMO_TEAM_ID']
+
+    with open(f"{output_dir}/{timestamp}_{team_id}.log", 'w') as fp:
+        cmd_str = f"bash run.sh {team_id} {demo_team_id} {match_id}"
         logging.info("\tExecuting: `%s`, log: %s", cmd_str, fp.name)
         proc = subprocess.Popen(cmd_str.split(' '),
                                 stdout=fp,
@@ -66,6 +94,7 @@ def process_next_match():
         proc.communicate()
         my_subprocess.remove(proc)
 
+    first_uploaded.match_id = match_id
     first_uploaded.status = 'Simulated'
 
     session.add(first_uploaded)
