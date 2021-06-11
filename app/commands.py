@@ -81,8 +81,10 @@ def process_next_match():
     output_dir = Path(app.config['SIMULATION_OUTPUTS_FOLDER'] + match_id)
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    demo_team_id = app.config['DEMO_TEAM_ID']
+
     with open(f"{output_dir}/{timestamp}_{team_id}.log", 'w') as fp:
-        cmd_str = f"bash run.sh {team_id} 999 {match_id}"
+        cmd_str = f"bash run.sh {team_id} {demo_team_id} {match_id}"
         logging.info("\tExecuting: `%s`, log: %s", cmd_str, fp.name)
         proc = subprocess.Popen(cmd_str.split(' '),
                                 stdout=fp,

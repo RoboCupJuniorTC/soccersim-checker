@@ -93,6 +93,10 @@ SIMULATION_OUTPUTS_FOLDER = basedir + "/outputs/"
 # The URL at which the outputs can be found/rendered
 OUTPUTS_URL = 'https://somewhere.com'
 
+# The ID of the team that is supposed to play against the uploaed code in these
+# "demo" matches
+DEMO_TEAM_ID = '999'
+
 # The image upload folder, when using models with images
 IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 
