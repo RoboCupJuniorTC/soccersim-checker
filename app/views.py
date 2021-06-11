@@ -1,6 +1,7 @@
-from flask import render_template
+from flask import render_template, g
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder.views import ModelView, CompactCRUDMixin
+from flask_appbuilder.models.sqla.filters import FilterEqualFunction
 from app.models import Upload
 
 from . import appbuilder, db
@@ -34,10 +35,15 @@ from . import appbuilder, db
 """
 
 
+def get_user():
+    return g.user
+
+
 class UploadModelView(CompactCRUDMixin, ModelView):
     datamodel = SQLAInterface(Upload)
     base_permissions = ['can_add', 'can_list', 'can_show', 'can_download']
     base_order = ('created_on', 'desc')
+    base_filters = [['created_by', FilterEqualFunction, get_user]]
     list_template = 'list_uploads.html'
 
     label_columns = {
