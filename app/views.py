@@ -49,9 +49,11 @@ class UploadModelView(CompactCRUDMixin, ModelView):
     add_columns = ["file", "description"]
     edit_columns = ["file", "description"]
     list_columns = ["created_by", "created_on",
-                    "file_name", "description", "custom_status", "download"]
+                    "file_name", "description", "custom_status", "download",
+                    "match_link"]
     show_columns = ["created_by", "created_on",
-                    "file_name", "description", "custom_status", "download"]
+                    "file_name", "description", "custom_status", "download",
+                    "match_link"]
 
 
 @appbuilder.app.errorhandler(404)
