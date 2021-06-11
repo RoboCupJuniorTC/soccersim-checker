@@ -84,6 +84,15 @@ LANGUAGES = {
 # The file upload folder, when using models with files
 UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 
+# Where to store robot code
+ROBOT_CODE_FOLDER = basedir + "/robot-code/"
+
+# Where the outputs of the simualtion are to be stored
+SIMULATION_OUTPUTS_FOLDER = basedir + "/outputs/"
+
+# The URL at which the outputs can be found/rendered
+OUTPUTS_URL = 'https://somewhere.com'
+
 # The image upload folder, when using models with images
 IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 
