@@ -10,12 +10,12 @@ function get_submission_errors(zipsize, entries) {
         if (entry.filename === "team_name.txt" && !entry.directory) {
             has_team_name_txt = true;
         }
-        if (entry.filename === "robot/robot.py" && !entry.directory) {
+        if (entry.filename === "rcj_soccer_team_blue/rcj_soccer_team_blue.py" && !entry.directory) {
             has_robot_py = true;
         }
 
         if (entry.directory) {
-            if (entry.filename === "robot/") {
+            if (entry.filename === "rcj_soccer_team_blue/") {
                 has_robot_dir = true;
             } else if ((entry.filename.split("/").length - 1) == 1) {
                 /* Check whether there is just one top-level folder */
@@ -33,7 +33,7 @@ function get_submission_errors(zipsize, entries) {
     }
 
     if (!has_robot_py) {
-        errors.push("robot.py file not found within robot/ folder in the submission!");
+        errors.push("rcj_soccer_team_blue.py file not found within robot/ folder in the submission!");
     }
 
     if (zipsize > 10000000) {
