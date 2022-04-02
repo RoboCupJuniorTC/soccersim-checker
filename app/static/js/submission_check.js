@@ -29,7 +29,7 @@ function get_submission_errors(zipsize, entries) {
     }
 
     if (!has_robot_dir) {
-        errors.push("robot/ directory not found in the submission!");
+        errors.push("rcj_soccer_team_blue/ directory not found in the submission!");
     }
 
     if (!has_robot_py) {
